@@ -1,0 +1,169 @@
+<!-- Navegacion -->
+<nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">DGG</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/proyecto/producto']">Productos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/proyecto/marca']">Marcas</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="display-flex mb-4" style="height: 40px; width: 100%;">
+        <h6 style="flex: 1 1 auto;">Registro de productos</h6>
+    </div>
+    <!-- Formulario de inserción -->
+    <form class="row" [formGroup]="formularioCrear">
+        <!-- nombre -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <input required class="form-control" type="text" placeholder="Nombre del producto" formControlName="nombre">
+        </div>
+        <!-- talla -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <select required class="form-control" formControlName="talla">
+                <option disabled value="">Selecciona la talla</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+            </select>
+        </div>
+        <!-- marca -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <select required class="form-control" formControlName="id_marca">
+                <option class="mb-3" disabled value="">Selecciona la marca</option>
+                <ng-container *ngFor="let marca of marcas; let i = index">
+                    <option value="{{marca.id_marca}}">{{ marca.nombre }}</option>
+                </ng-container>
+            </select>
+        </div>
+        <!-- cantidad en inventario -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <input required class="form-control" type="number" placeholder="Cantidad en inventario"
+                formControlName="cantidadInventario">
+        </div>
+        <!-- fecha embarque -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <input required class="form-control" type="text" placeholder="Fecha de embarque"
+                formControlName="fechaEmbarque" onfocus="(this.type='date')" onblur="(this.type='text')">
+        </div>
+        <!-- observaciones -->
+        <div class="mb-3 col-lg-6 col-sm-6">
+            <!-- <input required class="form-control" type="text" placeholder="Observaciones"
+                formControlName="observaciones"> -->
+            <textarea required class="form-control" cols="20" rows="1" placeholder="Observaciones"
+                formControlName="observaciones"></textarea>
+        </div>
+
+        <div class="col-12 mb-3 display-grid">
+            <button class="btn btn-primary" (click)="saveProducto()">
+                Agregar
+            </button>
+        </div>
+    </form>
+    <h6 class="ms-5">Productos</h6>
+    <!-- Listado -->
+    <div class="card">
+        <div class="card-body">
+            <table id="list-table" class="table">
+                <thead>
+                    <tr>
+                        <th column-name="nombre">Nombre</th>
+                        <th column-name="talla">Talla</th>
+                        <th column-name="observaciones">Observaciones</th>
+                        <th column-name="marca">Marca</th>
+                        <th column-name="cantidadInventario">Unidades en inventario</th>
+                        <th column-name="fechaEmbarque">Fecha de embarque</th>
+                        <th column-name="acciones">Acciones</th>
+                    </tr>
+                </thead>
+                <ng-container *ngFor="let producto of productos">
+                    <tbody>
+                        <td>{{producto.nombre}}</td>
+                        <td>{{producto.talla}}</td>
+                        <td>{{producto.observaciones}}</td>
+                        <td>{{producto.id_marca}}</td>
+                        <td>{{producto.cantidadInventario}}</td>
+                        <td>{{producto.fechaEmbarque}}</td>
+                        <td>
+                            <button class="btn btn-outline-primary me-2" (click)="getProducto(producto.id_producto)"
+                                data-bs-toggle="modal" data-bs-target="#editar">Editar</button>
+                            <button class="btn btn-outline-danger"
+                                (click)="deleteProducto(producto.id_producto)">Eliminar</button>
+                        </td>
+                    </tbody>
+                </ng-container>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="editar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Informacion del producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario de actualizacion -->
+                <form class="row" [formGroup]="formularioEditar">
+                    <!-- nombre -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <input required class="form-control" type="text" placeholder="Nombre del producto"
+                            formControlName="nombre">
+                    </div>
+                    <!-- talla -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <select required class="form-control" formControlName="talla">
+                            <option disabled value="">Selecciona la talla</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                        </select>
+                    </div>
+                    <!-- marca -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <select required class="form-control" formControlName="id_marca">
+                            <option class="mb-3" disabled value="">Selecciona la marca</option>
+                            <ng-container *ngFor="let marca of marcas; let i = index">
+                                <option value="{{marca.id_marca}}">{{ marca.nombre }}</option>
+                            </ng-container>
+                        </select>
+                    </div>
+                    <!-- cantidad en inventario -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <input required class="form-control" type="number" placeholder="Cantidad en inventario"
+                            formControlName="cantidadInventario">
+                    </div>
+                    <!-- fecha embarque -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <input required class="form-control" type="text" placeholder="Fecha de embarque"
+                            formControlName="fechaEmbarque" onfocus="(this.type='date')" onblur="(this.type='text')">
+                    </div>
+                    <!-- observaciones -->
+                    <div class="mb-3 col-lg-6 col-sm-6">
+                        <textarea required class="form-control" cols="20" rows="1" placeholder="Observaciones"
+                            formControlName="observaciones"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="updateProducto()">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
