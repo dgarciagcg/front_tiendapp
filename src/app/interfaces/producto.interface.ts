@@ -6,4 +6,5 @@ export interface Producto {
     id_marca: string;
     cantidadInventario: number;
     fechaEmbarque: Date;
+    nombreMarca?: string;
 }
